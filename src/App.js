@@ -15,7 +15,6 @@ export default function App() {
     return (
         <Router>
             <header>
-                Projects in React
             </header>
             <nav>
                 <ul>

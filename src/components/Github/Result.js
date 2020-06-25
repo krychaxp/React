@@ -33,7 +33,7 @@ const Result = (props) => {
         return (
             <div id="result">
                 <div id="user-info">
-                    <img class="user-logo" src={avatar_url} alt={name} />
+                    <img className="user-logo" src={avatar_url} alt={name} />
                     <h1>{name}</h1>
                     {bio}
                     <a className="link" href={html_url} rel="noopener noreferrer" target="_blank">
@@ -67,8 +67,8 @@ const Result = (props) => {
                                 <a href={html_url} rel="noopener noreferrer" key={i} title={name} target="_blank" className="name">
                                     {name}
                                 </a>
-                                <div class="descr">{description}</div>
-                                <div class="icons">
+                                <div className="descr">{description}</div>
+                                <div className="icons">
                                     <div><span />&nbsp;{language || "No language"}</div>
                                     {license ? <div>License: {license.name}</div> : ''}
                                     {homepage ? <div>
