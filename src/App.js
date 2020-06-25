@@ -1,30 +1,51 @@
-import React, { useState, useEffect } from 'react'
-import { TextField, Button} from '@material-ui/core';
-import Result from './components/Result'
+import React from "react";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link,
+    useRouteMatch,
+    useParams
+} from "react-router-dom";
+import Github from './components/Github'
+import Forms from './components/Forms'
+import Home from './components/Home'
 
 export default function App() {
-  const [value, setValue] = useState('')
-  const [searching, setSearching] = useState(false)
-  navigater('d')
-  useEffect(()=>{
-    setSearching(false)
-  },[searching])
-  return (
-    <React.Fragment>
-      <header>
-        <h1>Something in React</h1>
-      </header>
-      <nav>
-        <div className="flex-center">
-          <TextField className="m-10" label="Search user" variant="outlined" value={value} onChange={(e) => setValue(e.target.value)} />
-          <Button className="m-10" variant="contained" color="primary" onClick={()=>setSearching(true)}>Search</Button>
-        </div>
-      </nav>
-      <main>
-          <Result value={value} searching={searching}/>
-      </main>
-      <footer>
-      </footer>
-    </React.Fragment>
-  )
+    return (
+        <Router>
+            <header>
+                Projects in React
+            </header>
+            <nav>
+                <ul>
+                    <li>
+                        <Link to="/">Home</Link>
+                    </li>
+                    <li>
+                        <Link to="/github">Github</Link>
+                    </li>
+                    <li>
+                        <Link to="/forms">Forms</Link>
+                    </li>
+                </ul>
+            </nav>
+            <main>
+                <Switch>
+                    <Route exact path="/">
+                        <Home />
+                    </Route>
+                    <Route path="/github">
+                        <Github />
+                    </Route>
+                    <Route path="/forms">
+                        <Forms />
+                    </Route>
+                </Switch>
+            </main>
+            <footer>
+                &copy; Copyright Krychaxp 2020
+            </footer>
+        </Router>
+    );
 }
