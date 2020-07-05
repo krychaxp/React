@@ -1,32 +1,13 @@
 import React from "react";
-import { useForm } from "react-hook-form";
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
   Link,
   useRouteMatch,
   useParams
 } from "react-router-dom";
-/*
 export default function Forms() {
-  const { register, handleSubmit } = useForm();
-  const onSubmit = (data, e) => {
-    console.log("Submit event", e);
-    alert(JSON.stringify(data));
-  };
-
-  return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input name="firstName" ref={register} />
-      <input name="lastName" ref={register} />
-      <button type="submit">Submit</button>
-    </form>
-  );
-}*/
-export default function Forms() {
-  let match = useRouteMatch();
-  console.log(match);
+  const match = useRouteMatch();
   return (
     <div>
       <h2>Forms</h2>

@@ -11,19 +11,20 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    flex-flow: row wrap;
-    margin: 10px auto;
     width: 100%;
     &>*{
         margin:0 20px
+    }
+    @media screen and (max-width:850px){
+        flex-direction: column;
     }
 }
 
 #user-info {
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    text-align: left;
+    align-items: center;
+    text-align: center;
     flex-direction: column;
     max-width: 400px;
     width: 100%;
@@ -46,6 +47,9 @@
         justify-content: center;
         align-items: flex-start;
         text-align: left;
+    }
+    @media screen and (max-width:850px){
+        margin: 0 auto;
     }
 }
 
@@ -76,8 +80,17 @@
 
         &>.icons {
             display: flex;
-
-            & span {
+            &>.website{
+                display: flex;
+                justify-content: center;
+                align-items:center;
+            }
+            &.skel{
+                display: block;
+                border-radius: 0;
+                background-color: none;
+            }
+            & .ico {
                 display: block;
                 border-radius: 50%;
                 width: 10px;
