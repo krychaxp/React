@@ -1,14 +1,8 @@
-import React,{useEffect} from "react";
+import React from "react";
 import * as Highcharts from 'highcharts';
 import * as Exporting from 'highcharts/modules/exporting';
 import axios from 'axios'
 export default () => {
-    useEffect(() => {
-        console.log("1")
-        return () => {
-            console.log("2")
-        }
-    }, [])
     Exporting(Highcharts);
     (async function() {
         const {data} = await axios.get("http://cfg.krychaxp.pl/data.php?json=pm")

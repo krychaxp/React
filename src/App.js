@@ -5,38 +5,45 @@ import Forms from './components/Forms'
 import Home from './components/Home'
 import Alert from './components/Alert'
 import Charts from './components/Charts'
+import Images from './components/Images'
 const routes = [
-    {
-      path: "/",
-      title:"Home",
-      inList:true,
-      exact: true,
-      component: () => <Home />
-    },
-    {
-      path: "/github",
-      title:"Github",
-      inList:true,
-      component: () => <Github />
-    },
-    {
-      path: "/forms",
-      title:"Forms",
-      inList:true,
-      component: () => <Forms />
-    },
-    {
-      path: "/charts",
-      title:"Charts",
-      inList:true,
-      component: () => <Charts />
-    },
-    {
-      path: "*",
-      inList:false,
-      component: () => <h3>Nie znaleziono danej strony</h3>
-    }
-  ];
+{
+    path: "/",
+    title:"Home",
+    inList:true,
+    exact: true,
+    component: () => <Home />
+},
+{
+    path: "/github",
+    title:"Github",
+    inList:true,
+    component: () => <Github />
+},
+{
+    path: "/forms",
+    title:"Forms",
+    inList:true,
+    component: () => <Forms />
+},
+{
+    path: "/charts",
+    title:"Charts",
+    inList:true,
+    component: () => <Charts />
+},
+{
+    path: "/images",
+    title:"Images",
+    inList:true,
+    component: () => <Images />
+},
+{
+    path: "*",
+    inList:false,
+    component: () => <h3>Nie znaleziono danej strony</h3>
+}
+];
 export default function () {
     const [alertInfo, setAlertInfo] = useState(null)
     const setAlert = (a, b) => { setAlertInfo(<Alert type={a} text={b} />) }

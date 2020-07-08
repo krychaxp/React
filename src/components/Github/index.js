@@ -53,6 +53,7 @@ const Check = () => {
   })
   useEffect(() => {
     (async () => {
+      console.log("xdty");
       try {
         setUserIsFinding(true)
         await validation();

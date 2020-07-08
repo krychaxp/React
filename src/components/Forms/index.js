@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 export default function Forms() {
   const match = useRouteMatch();
+  console.log(match);
   return (
     <div>
       <h2>Forms</h2>
