@@ -11,8 +11,8 @@ export default function () {
   const { path, url } = useRouteMatch();
   const [value, setValue] = useState('')
   return (
-    <>
-      <div id="searcher">
+    <div id="github-box">
+      <div className="g-searcher">
         <TextField label="Search user" variant="outlined" value={value} onChange={(e) => setValue(e.target.value)} />
         <Link to={`${url}/${value}`} >
           <Button variant="contained" color="primary">Search</Button>
@@ -26,7 +26,7 @@ export default function () {
           <Check />
         </Route>
       </Switch>
-    </>
+    </div>
   )
 }
 const Check = () => {
@@ -53,7 +53,6 @@ const Check = () => {
   })
   useEffect(() => {
     (async () => {
-      console.log("xdty");
       try {
         setUserIsFinding(true)
         await validation();
@@ -72,8 +71,8 @@ const Result = (props) => {
   const { userData: [data, followersUser, repositoriesUser] } = props
   const { avatar_url, html_url, location, name, followers, public_repos, company, public_gists, bio } = data;
   return (
-    <div id="result">
-      <div id="user-info">
+    <div className="g-result">
+      <div className="g-user-info">
         <img className="user-logo" src={avatar_url} alt={name} />
         <h1>{name}</h1>
         {bio}
@@ -98,7 +97,7 @@ const Result = (props) => {
         <h2>Repositiories ({public_repos})</h2>
         <h2>Gits ({public_gists})</h2>
       </div>
-      <div id="repositories">
+      <div className="g-repositories">
         {repositoriesUser.map((v, i) => {
           const { html_url, name, description, created_at, updated_at, language, license, homepage } = v;
           const days = Math.round((Date.now() - new Date(updated_at).getTime()) / 1000 / 60 / 60 / 24);
@@ -129,8 +128,8 @@ const Result = (props) => {
 }
 const Loading = () => {
   return (
-    <div id="result">
-      <div id="user-info">
+    <div className="g-result">
+      <div className="g-user-info">
         <Skeleton variant="rect" width={400} height={400} />
         <Skeleton variant="text" width={300} height={50} />
         <Skeleton variant="text" width={200} height={30} />
@@ -140,7 +139,7 @@ const Loading = () => {
         <Skeleton variant="text" width={250} height={30} />
         <Skeleton variant="text" width={200} height={50} />
       </div>
-      <div id="repositories">
+      <div className="g-repositories">
         {Array(6).fill().map((v, i) => {
           const rand1 = Math.floor(Math.random() * 100) + 100
           const rand2 = Math.floor(Math.random() * 100) + 150

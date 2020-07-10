@@ -2,7 +2,7 @@ import React from "react";
 import * as Highcharts from 'highcharts';
 import * as Exporting from 'highcharts/modules/exporting';
 import axios from 'axios'
-export default () => {
+export default function(){
     Exporting(Highcharts);
     (async function() {
         const {data} = await axios.get("http://cfg.krychaxp.pl/data.php?json=pm")
