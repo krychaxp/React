@@ -163,9 +163,12 @@
 #form-box {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     flex-direction: column;
-    >input{
-        display: block
+    text-align: left;
+    max-width: 400px;
+    margin: 0 auto;
+    > div {
+        margin: 10px 0;
     }
 }
