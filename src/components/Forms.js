@@ -92,7 +92,9 @@ export default () => {
           <Select
             name="status"
             ref={() => register({ name: "status" })}
-            onChange={(e) => {setValue("status", e.target.value) }}
+            onChange={(e) => {
+              setValue("status", e.target.value);
+            }}
           >
             <MenuItem value=""> </MenuItem>
             <MenuItem value="person">Person</MenuItem>

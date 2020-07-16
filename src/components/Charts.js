@@ -60,8 +60,6 @@ export default function(){
             }]
         });
     })();
-
-
     return (
         <div id="chart">
             charts

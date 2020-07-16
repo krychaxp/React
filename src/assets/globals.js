@@ -4,6 +4,7 @@ import Forms from "../components/Forms.js";
 import Charts from "../components/Charts.js";
 import Images from "../components/Images.js";
 import Table from "../components/Table.js";
+import Google from "../components/Google.js";
 window.localStorage.lang = window.localStorage.lang || "en";
 export const lang = window.localStorage.lang;
 export const globals = {
@@ -32,6 +33,11 @@ export const globals = {
       path: "/table",
       title: "Table",
       component: <Table />,
+    },
+    {
+      path: "/google",
+      title: "Google",
+      component: <Google />,
     },
   ],
 };

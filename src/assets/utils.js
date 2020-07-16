@@ -18,11 +18,7 @@ export const setCodeAddress = (a) => {
   }
   return a;
 };
-export const currentDate = new Date()
-  .toLocaleDateString()
-  .split(".")
-  .reverse()
-  .join("-");
+export const currentDate = new Date().toLocaleDateString().split(".").reverse().join("-");
 export const checkAccountBank=async (a)=>{
   try {//5272677009
     await axios.get(

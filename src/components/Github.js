@@ -48,8 +48,7 @@ const Check = () => {
   const [output, setOutput] = useState(null);
   const [userIsFinding, setUserIsFinding] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
-  const validation = () =>
-    new Promise((resolve, reject) => {
+  const validation = () =>new Promise((resolve, reject) => {
       if (!userNick) {
         reject("<h3>Input can not be empty</h3>");
       }
@@ -58,8 +57,7 @@ const Check = () => {
       }
       resolve();
     });
-  const isUserExist = () =>
-    new Promise(async (resolve, reject) => {
+  const isUserExist = () =>new Promise(async (resolve, reject) => {
       try {
         setIsOpen(true);
         if (!navigator.onLine) {
