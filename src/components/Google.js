@@ -43,7 +43,7 @@ export default function Google() {
         //   )} my style button
         onSuccess={successGoogle}
         onFailure={failGoogle}
-        isSignedIn={true}
+        isSignedIn={false}
       />
       <br />
       <br />
@@ -85,6 +85,7 @@ export default function Google() {
         e-mail:{UserFB.email}
       </div>
       <div style={{fontSize:'80px',color:'red'}}><DiReact/><FaNpm/></div>
+      werwerrewwerwe
     </>
   );
 }
