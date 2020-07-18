@@ -1,76 +1,56 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import Github from './components/Github'
-import Forms from './components/Forms'
-import Home from './components/Home'
-import Alert from './components/Alert'
-import Charts from './components/Charts'
-const routes = [
-    {
-      path: "/",
-      title:"Home",
-      inList:true,
-      exact: true,
-      component: () => <Home />
-    },
-    {
-      path: "/github",
-      title:"Github",
-      inList:true,
-      component: () => <Github />
-    },
-    {
-      path: "/forms",
-      title:"Forms",
-      inList:true,
-      component: () => <Forms />
-    },
-    {
-      path: "/charts",
-      title:"Charts",
-      inList:true,
-      component: () => <Charts />
-    },
-    {
-      path: "*",
-      inList:false,
-      component: () => <h3>Nie znaleziono danej strony</h3>
-    }
-  ];
+import Alert from "./assets/Alert.js";
+import { globals } from "./assets/globals.js";
+import { Helmet } from "react-helmet";
+import { Button } from "@material-ui/core";
 export default function () {
-    const [alertInfo, setAlertInfo] = useState(null)
-    const setAlert = (a, b) => { setAlertInfo(<Alert type={a} text={b} />) }
-    window.onoffline = () => setAlert('warning', 'Stracono połączenie z internetem.')
-    window.ononline = () => setAlert('info', 'Ponownie połączono z internetem.')
-    return (
-        <Router>
+  const [alertInfo, setAlertInfo] = useState(null);
+  const setAlert = (a, b) => setAlertInfo(<Alert type={a} text={b} />);
+  window.onoffline = () =>
+    setAlert("warning", "Stracono połączenie z internetem.");
+  window.ononline = () => setAlert("info", "Ponownie połączono z internetem.");
+  const { routes } = globals;
+  return (
+    <Router>
+      <main>
+        <Switch>
+          <Route exact={true} path="/">
             <nav>
-                <ul>
-                {routes.filter(v=>v.inList).map((v,i)=>
-                    <li key={i}>
-                        <Link to={v.path}>{v.title}</Link>
-                    </li>
-                )}
-                </ul>
+              {routes.map(({ path, title }, i) => (
+                <Link key={i} to={path}>
+                  <span>{title}</span>
+                </Link>
+              ))}
             </nav>
-            <main>
-                <Switch>
-                {routes.map((v,i)=>
-                    <Route 
-                    key={i}
-                    exact={v.exact} 
-                    path={v.path}
-                    children={v.component}
-                    />
-                )}
-                </Switch>
-            </main>
-            <footer>
-                &copy; Copyright Krychaxp 2020
-            </footer>
-            {alertInfo}
-        </Router>
-    );
+          </Route>
+          {routes.map(({ path, component, title }, i) => (
+            <Route key={i} path={path}>
+              <Helmet>
+                <title>{title} - Krychaxp React App</title>
+              </Helmet>
+              <div id="back-box">
+                <Link to="/">
+                  <Button variant="contained" color="primary">
+                    Back
+                  </Button>
+                </Link>
+              </div>
+              {component}
+            </Route>
+          ))}
+          <Route path="*">
+            <Helmet>
+              <title>Page not Found</title>
+            </Helmet>
+            <h3>Nie znaleziono danej strony</h3>
+          </Route>
+        </Switch>
+      </main>
+      <footer>&copy; Copyright Krychaxp 2020</footer>
+      {alertInfo}
+    </Router>
+  );
 }
 /*
 let { path, url } = useRouteMatch();
