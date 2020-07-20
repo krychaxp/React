@@ -4,22 +4,25 @@ import { isValidPesel, checkGender, getDateOfBirth } from "pesel-utils";
 import {
   Button,
   TextField,
-  Switch,
-  FormControl,
-  InputLabel,
-  Select,
+  // Switch,
   MenuItem,
+  InputAdornment,
+  // Select,
 } from "@material-ui/core";
 import axios from "axios";
-import Loading from "../assets/Loading";
-import { WL_API } from "../assets/API";
 import {
-  setAccountNumber,
+  Loading,
+  convertAccountNumber,
   currentDate,
   setCodeAddress,
   checkAccountBank,
-} from "../assets/utils";
-import { Autocomplete } from "@material-ui/lab";
+} from "../../utils";
+import { WL_API } from "../../../config";
+// import { Autocomplete } from "@material-ui/lab";
+import content from "./content.js";
+import { lang } from "../../../config";
+import { MdPersonPin } from "react-icons/md";
+import styles from './index.module.scss'
 export default () => {
   const {
     register,
@@ -28,6 +31,7 @@ export default () => {
     getValues,
     watch,
     errors,
+    triggerValidation
   } = useForm();
   const watchShowStatus = watch("status", false);
   const [datalist, setDatalist] = useState([]);
@@ -40,6 +44,7 @@ export default () => {
     return true;
   };
   const setFromNip = async () => {
+    let check = false;
     try {
       setBackdropOpen(true);
       const nip = getValues("nip");
@@ -56,25 +61,30 @@ export default () => {
           accountNumbers,
         } = data.result.subject;
         const address = residenceAddress || workingAddress;
-        setValue("company", name);
-        setValue("krs", krs);
-        setValue("regon", regon);
-        setValue("street", address.split(",")[0]);
-        setValue("codeAddress", address.match(/\d{2}-\d{3}/)[0]);
-        setValue("city", address.match(/\d{2}-\d{3} (.*)/)[1]);
-        setDatalist(accountNumbers.map((v) => setAccountNumber(v)));
-        return true;
+        setValue("company", name, { shouldValidate: true });
+        setValue("krs", krs, { shouldValidate: true });
+        setValue("regon", regon, { shouldValidate: true });
+        setValue("street", address.split(",")[0], { shouldValidate: true });
+        setValue("codeAddress", address.match(/\d{2}-\d{3}/)[0], {
+          shouldValidate: true,
+        });
+        setValue("city", address.match(/\d{2}-\d{3} (.*)/)[1], {
+          shouldValidate: true,
+        });
+        setDatalist(accountNumbers.map((v) => convertAccountNumber(v)));
+        check = true;
       } else {
-        throw new Error("something goes wrong");
+        throw new Error("something goes wrong no 'subject'");
       }
     } catch (err) {
       alert("Invalid NIP");
-      return false;
     } finally {
       setBackdropOpen(false);
+      return check;
     }
   };
-  const onSubmit = async (data) => {
+  const onSubmit = (data) => {
+    console.log(data);
     if (
       (getValues("status") === "person" && setFromPesel()) ||
       (getValues("status") === "company" && setFromNip())
@@ -86,21 +96,30 @@ export default () => {
   };
   return (
     <>
-      <form id="form-box" onSubmit={handleSubmit(onSubmit)}>
-        <FormControl>
-          <InputLabel>Select your status *</InputLabel>
-          <Select
-            name="status"
-            ref={() => register({ name: "status" })}
-            onChange={(e) => {
-              setValue("status", e.target.value);
-            }}
-          >
-            <MenuItem value=""> </MenuItem>
-            <MenuItem value="person">Person</MenuItem>
-            <MenuItem value="company">Company</MenuItem>
-          </Select>
-        </FormControl>
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        <TextField
+          label={content.form.status.label[lang] + " *"}
+          name="status"
+          select
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <MdPersonPin />
+              </InputAdornment>
+            ),
+          }}
+          onChange={(e) => {
+            console.log(e, watch());
+            register("status");
+            setValue("status", e.target.value);
+          }}
+        >
+          <MenuItem />
+          <MenuItem value="person">{content.form.status.person[lang]}</MenuItem>
+          <MenuItem value="company">
+            {content.form.status.company[lang]}
+          </MenuItem>
+        </TextField>
         {watchShowStatus === "person" && (
           <>
             <TextField
@@ -116,25 +135,26 @@ export default () => {
                 e.target.value = e.target.value.replace(/\D/g, "").slice(0, 11);
                 setFromPesel();
               }}
+              onBlur={e=>triggerValidation(e.currentTarget.name)}
               InputLabelProps={{ shrink: true }}
-              error={errors.pesel}
+              error={!!errors.pesel}
               helperText={
                 (errors.pesel?.type === "required" &&
-                  "This input is required") ||
+                  content.form.pesel.e.required[lang]) ||
                 (errors.pesel?.type === "pattern" &&
-                  "This input must have 11 digits")
+                  content.form.pesel.e.pattern[lang])
               }
             />
             <TextField
-              label="Sex *"
+              label={content.form.sex.label[lang] + " *"}
               name="sex"
-              placeholder="male/female"
+              placeholder={content.form.sex.placeholder[lang]}
               disabled
               inputRef={register}
               InputLabelProps={{ shrink: true }}
             />
             <TextField
-              label="Date of birth*"
+              label={content.form.birth.label[lang] + " *"}
               name="birth"
               placeholder="01-01-1900"
               disabled
@@ -148,6 +168,7 @@ export default () => {
             <TextField
               label="NIP *"
               type="number"
+              onBlur={e=>triggerValidation(e.currentTarget.name)}
               placeholder="0123456789"
               name="nip"
               inputRef={register({ required: true, pattern: /^\d{10}$/ })}
@@ -156,22 +177,23 @@ export default () => {
                 e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
                 if (len && e.target.value.length === 10) setFromNip();
               }}
-              error={errors.nip}
+              error={!!errors.nip}
               helperText={
-                (errors.nip?.type === "required" && "This input is required") ||
+                (errors.nip?.type === "required" &&
+                  content.form.nip.e.required[lang]) ||
                 (errors.nip?.type === "pattern" &&
-                  "This input must have 10 digits")
+                  content.form.nip.e.pattern[lang])
               }
             />
             <TextField
-              label="Company Name *"
+              label={content.form.company.label[lang] + " *"}
               name="company"
               disabled
               inputRef={register}
               InputLabelProps={{ shrink: true }}
             />
             <TextField
-              label="Regon"
+              label="Regon *"
               name="regon"
               disabled
               inputRef={register}
@@ -189,148 +211,136 @@ export default () => {
         {watchShowStatus && (
           <>
             <TextField
-              label="First name *"
-              type="text"
+              label={content.form.firstName.label[lang] + " *"}
               name="firstName"
+              onBlur={e=>triggerValidation(e.currentTarget.name)}
               inputRef={register({ required: true, pattern: /^.{3,}$/ })}
-              error={errors.firstName}
+              error={!!errors.firstName}
               InputLabelProps={{ shrink: true }}
               helperText={
                 (errors.firstName?.type === "required" &&
-                  "This input is required") ||
+                  content.form.firstName.e.required[lang]) ||
                 (errors.firstName?.type === "pattern" &&
-                  "Too short first name, min 3 characters")
+                  content.form.firstName.e.pattern[lang])
               }
             />
             <TextField
-              label="Last name *"
-              type="text"
+              label={content.form.lastName.label[lang] + " *"}
               name="lastName"
               inputRef={register({ required: true, pattern: /^.{3,}$/ })}
-              error={errors.lastName}
+              error={!!errors.lastName}
               helperText={
                 (errors.lastName?.type === "required" &&
-                  "This input is required") ||
+                  content.form.lastName.e.required[lang]) ||
                 (errors.lastName?.type === "pattern" &&
-                  "Too short last name, min 3 characters")
+                  content.form.lastName.e.pattern[lang])
               }
               InputLabelProps={{ shrink: true }}
             />
             <TextField
-              label="City *"
-              type="text"
+              label={content.form.city.label[lang] + " *"}
               name="city"
+              onBlur={e=>triggerValidation(e.currentTarget.name)}
               inputRef={register({ required: true, pattern: /^.{3,}$/ })}
-              error={errors.city}
+              error={!!errors.city}
               disabled={getValues("status") === "company"}
               helperText={
                 (errors.city?.type === "required" &&
-                  "This input is required") ||
+                  content.form.city.e.required[lang]) ||
                 (errors.city?.type === "pattern" &&
-                  "Too short city name, min 3 characters")
+                  content.form.city.e.pattern[lang])
               }
               InputLabelProps={{ shrink: true }}
             />
             <TextField
-              label="Street *"
-              type="text"
+              label={content.form.street.label[lang] + " *"}
               name="street"
+              onBlur={e=>triggerValidation(e.currentTarget.name)}
               inputRef={register({ required: true, pattern: /^.{3,}$/ })}
-              error={errors.street}
+              error={!!errors.street}
               disabled={getValues("status") === "company"}
               helperText={
                 (errors.street?.type === "required" &&
-                  "This input is required") ||
+                  content.form.street.e.required[lang]) ||
                 (errors.street?.type === "pattern" &&
-                  "Too short street name, min 3 characters")
+                  content.form.street.e.pattern[lang])
               }
               InputLabelProps={{ shrink: true }}
             />
             <TextField
-              label="Code Address *"
-              type="text"
+              label={content.form.codeAddress.label[lang] + " *"}
               placeholder="00-000"
               name="codeAddress"
+              onBlur={e=>triggerValidation(e.currentTarget.name)}
               inputRef={register({ required: true, pattern: /^\d{2}-\d{3}$/ })}
-              error={errors.codeAddress}
+              error={!!errors.codeAddress}
               disabled={getValues("status") === "company"}
               helperText={
                 (errors.codeAddress?.type === "required" &&
-                  "This input is required") ||
+                  content.form.codeAddress.e.required[lang]) ||
                 (errors.codeAddress?.type === "pattern" &&
-                  "Only pattern like 00-000")
+                  content.form.codeAddress.e.pattern[lang])
               }
               onChange={(e) =>
                 (e.target.value = setCodeAddress(e.target.value))
               }
               InputLabelProps={{ shrink: true }}
             />
-            <Switch color="primary" name="checkedB" /> Like programing
-            <Autocomplete
+            {/* <Autocomplete
               options={datalist}
-              placeholder="00 0000 0000 0000 0000 0000 0000"
+              InputLabelProps={{ shrink: true }}
+              freeSolo={getValues("status") === "person" || !datalist.length}
+              noOptionsText="No options/Brak "
+              onInputChange={(e, v) => {
+                register("bank");
+                setAccountValue(convertAccountNumber(v));
+                setValue("bank", convertAccountNumber(v));
+                console.log(v, accountValue);
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Account Number"
-                  variant="outlined"
-                  value="XDxddxdx"
-                  onChange={(e) => {
-                    console.log(watch());
-                    console.log(params);
-                    console.log(e, e.target.value);
-                    e.target.value = setAccountNumber(e.target.value);
-                  }}
+                  label={content.form.bank.label[lang] + " *"}
                   name="bank"
-                  ref={register({
-                    required: true,
-                    pattern: /^\d{2}( \d{4}){6}$/,
-                    validate: async (value) => await checkAccountBank(value),
-                  })}
+                  value={accountValue}
+                  placeholder="00 0000 0000 0000 0000 0000 0000"
+                  error={!!errors.bank}
+                  helperText={
+                    (errors.bank?.type === "required" &&
+                      content.form.bank.e.required[lang]) ||
+                    (errors.bank?.type === "pattern" &&
+                      content.form.bank.e.pattern[lang]) ||
+                    (errors.bank?.type === "validate" &&
+                      content.form.bank.e.validate[lang])
+                  }
+                  // inputRef={register({
+                  //   required: true,
+                  //   pattern: /^\d{2}( \d{4}){6}$/,
+                  //   validate: async (value) => await checkAccountBank(value),
+                  // })}
                 />
               )}
+            /> */}
+            <TextField
+              label={content.form.bank.label[lang]}
+              name="bank"
+              onBlur={e=>triggerValidation(e.currentTarget.name)}
+              placeholder="00 0000 0000 0000 0000 0000 0000"
+              error={!!errors.bank}
+              helperText={
+                (errors.bank?.type === "pattern" &&
+                  content.form.bank.e.pattern[lang]) ||
+                (errors.bank?.type === "validate" &&
+                  content.form.bank.e.validate[lang])
+              }
+              onChange={e=>{
+                e.target.value=convertAccountNumber(e.target.value)
+              }}
+              inputRef={register({
+                pattern: /^(\d{2}( \d{4}){6})?$/,
+                validate: async (value) => !value||await checkAccountBank(value),
+              })}
             />
-            {/* <label>
-              <div>Account bank number*</div>
-              <input
-                type="text"
-                placeholder="00 0000 0000 0000 0000 0000 0000"
-                name="bank"
-                ref={register({
-                  required: true,
-                  pattern: /^\d{2}( \d{4}){6}$/,
-                  validate: async (value) => {
-                    try {
-                      await axios.get(
-                        `${WL_API}bank-account/${value.replace(
-                          /\D/g,
-                          ""
-                        )}?date=${currentDate}`
-                      );
-                      console.log("account Number is Ok");
-                      return true;
-                    } catch (err) {
-                      console.log(err);
-                      return false;
-                    }
-                  },
-                })}
-                onChange={(e) =>
-                  (e.target.value = setAccountNumber(e.target.value))
-                }
-                list={datalist.length ? "bank-account-list" : ""}
-              />
-              <datalist id="bank-account-list">
-                {datalist.map((v, i) => (
-                  <option key={i} value={v} />
-                ))}
-              </datalist>
-              <span>
-                {errors.bank?.type === "required" && "This input is required"}
-                {errors.bank?.type === "pattern" && "Input must have 26 digits"}
-                {errors.bank?.type === "validate" && "Invalid account number"}
-              </span>
-            </label> */}
             <Button type="submit">Submit</Button>
           </>
         )}

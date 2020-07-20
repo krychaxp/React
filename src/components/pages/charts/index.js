@@ -2,20 +2,22 @@ import React from "react";
 import * as Highcharts from 'highcharts';
 import * as Exporting from 'highcharts/modules/exporting';
 import axios from 'axios'
+import content from './content.js'
+import {lang,AIR_API} from '../../../config'
 export default function(){
     Exporting(Highcharts);
     (async function() {
-        const {data} = await axios.get("http://cfg.krychaxp.pl/data.php?json=pm")
+        const {data} = await axios.get(AIR_API)
         Highcharts.chart('chart', {
             title: {
-                text: 'Zanieczyszczenie powietrza w Poznaniu',
+                text: content.chart.title[lang],
                 style: {
                     fontSize: '25px'
                 }
             },
 
             subtitle: {
-                text: `Ostatnie ${data.length} zarejestrowanych pomiarów`
+                text:content.chart.subtitle[lang](data.length) 
             },
 
             yAxis: {
@@ -61,8 +63,6 @@ export default function(){
         });
     })();
     return (
-        <div id="chart">
-            charts
-        </div>
+        <div id="chart"></div>
     )
 }
