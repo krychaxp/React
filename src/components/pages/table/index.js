@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import sort from "fast-sort";
-import Backdrop from "@material-ui/core/Backdrop";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import { Loading } from "../../utils";
+import styles from "./index.module.scss";
+import { CNT_API } from "../../../config";
 export default function () {
   const [countries, setCountries] = useState([]);
   const [loading, setloading] = useState(false);
   useEffect(() => {
     (async () => {
-      const url =
-        "https://restcountries.eu/rest/v2/all?fields=name;alpha2Code;capital;region;population;area;nativeName;flag";
+      const url = CNT_API;
       let { data } = await axios.get(url);
       data = data.map((v) =>
         Object.fromEntries(
@@ -31,7 +31,7 @@ export default function () {
   };
   return (
     <>
-      <table id="form-table">
+      <table class={styles.table}>
         <thead>
           <tr>
             {countries.length
@@ -81,9 +81,7 @@ export default function () {
             : null}
         </tbody>
       </table>
-      <Backdrop open={loading} style={{color:'white',zIndex:4}}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
+      <Loading open={loading} />
     </>
   );
 }

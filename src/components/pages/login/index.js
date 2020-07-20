@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import { GoogleLogout, GoogleLogin } from "react-google-login";
 // import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import FacebookLogin from "react-facebook-login";
@@ -12,8 +12,8 @@ export default function Google() {
     alert("nie udało się zalogować");
   };
   const successFB = (response) => {
-    console.log("Xddxdx",response,!response.status)
-    if(response.status)return
+    console.log("Xddxdx", response, !response.status);
+    if (response.status) return;
     const { name, email, picture } = response;
     setUserFB({
       name: name,
@@ -34,21 +34,26 @@ export default function Google() {
     alert("Pomyślnie wylogowano");
     setUserGoogle({});
   };
+  const logoutFB = (e) => {
+    console.log(e);
+    setUserFB({});
+  };
   return (
     <>
       <GoogleLogin
-        clientId="965500718724-s0jg5bdi7aed0lvcts2ks02ad8mcvv0s.apps.googleusercontent.com"
+        clientId={process.env.REACT_APP_Google_clientId}
         //   render={renderProps => (
         //     <button onClick={renderProps.onClick} disabled={renderProps.disabled}>This is my custom Google button</button>
         //   )} my style button
         onSuccess={successGoogle}
         onFailure={failGoogle}
-        isSignedIn={false}
+        // isSignedIn={false}
+        // cookiePolicy={"single_host_origin"}
       />
       <br />
       <br />
       <GoogleLogout
-        clientId="965500718724-s0jg5bdi7aed0lvcts2ks02ad8mcvv0s.apps.googleusercontent.com"
+        clientId={process.env.REACT_APP_Google_clientId}
         buttonText="Logout"
         onLogoutSuccess={logoutGoogle}
       />
@@ -65,7 +70,7 @@ export default function Google() {
       <br />
       <br />
       <FacebookLogin
-        appId="981341145633931"
+        appId={process.env.REACT_APP_FB_appId}
         fields="name,email,picture"
         callback={successFB}
         scope="public_profile, email, user_birthday"
@@ -77,6 +82,8 @@ export default function Google() {
         //   </button>
         // )}
       />
+      <br />
+      <button onClick={logoutFB}>Logout</button>
       <div>
         icon: <img src={UserFB.icon || "/favicon.ico"} alt="icon" />
         <br />
@@ -84,8 +91,10 @@ export default function Google() {
         <br />
         e-mail:{UserFB.email}
       </div>
-      <div style={{fontSize:'80px',color:'red'}}><DiReact/><FaNpm/></div>
-      werwerrewwerwe
+      <div style={{ fontSize: "80px", color: "red" }}>
+        <DiReact />
+        <FaNpm />
+      </div>
     </>
   );
 }
