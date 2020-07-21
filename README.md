@@ -5,6 +5,10 @@ This project was made by [Krychaxp](https://krychaxp.pl/?utm_source=github_react
 This app includes my React's skills.
 Routing, APIs, axios, useEffect/State, hooks, css.module, languages (pl,en), login by google or facebook account. 
 
+## Can you see demo?
+
+[Click here](https://krychaxp.github.io/react/build) to open this app on Github pages
+
 ## How to run ?
 
 You must have [Node.js](https://nodejs.org) and be on the root directory, next you open your console (cmd/PS) and write:
