@@ -16,6 +16,6 @@ serviceWorker.register();
 // Learn more about service workers: https://bit.ly/CRA-PWA
 /***
   Made by krychaxp
-  21.07.2020
+  Last upadate: 22.07.2020
   web:krychaxp.pl
 ***/
