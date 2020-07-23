@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { lang, availableLang } from "../config";
-import { Helmet } from "react-helmet";
 import { Button } from "@material-ui/core";
 import content from "./content.js";
 import styles from "./index.module.scss";
@@ -24,8 +23,8 @@ export default function () {
         <div>
           {availableLang.map((v, i) => (
             <Button
-            key={i}
-              variant={v===lang?"contained":"outlined"}
+              key={i}
+              variant={v === lang ? "contained" : "outlined"}
               color="primary"
               onClick={() => changeLanguage(v)}
             >
@@ -43,9 +42,6 @@ export default function () {
               </Link>
             ))}
           </nav>
-          <Helmet>
-            <title>Krychaxp React App</title>
-          </Helmet>
         </Route>
         <Route></Route>
       </Switch>
@@ -53,18 +49,14 @@ export default function () {
         <Switch>
           {content.routing.map((v, i) =>
             Object.entries(v.title).map((va, j) => (
-              <Route key={i * va.length + j} path={"/" + va[1].toLowerCase()}>
-                <Helmet>
-                  <title>{va[1]} - Krychaxp React App</title>
-                </Helmet>
-                {v.component}
-              </Route>
+              <Route
+                key={i * va.length + j}
+                path={"/" + va[1].toLowerCase()}
+                children={v.component}
+              />
             ))
           )}
           <Route path="/(.+)">
-            <Helmet>
-              <title>{content.pageNot[lang]}</title>
-            </Helmet>
             <h3>{content.pageNot[lang]}</h3>
           </Route>
         </Switch>

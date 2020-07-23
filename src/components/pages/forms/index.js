@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState} from "react";
 import { useForm } from "react-hook-form";
 import { isValidPesel, checkGender, getDateOfBirth } from "pesel-utils";
 import {
@@ -22,7 +22,7 @@ import { WL_API } from "../../../config";
 import content from "./content.js";
 import { lang } from "../../../config";
 import { MdPersonPin } from "react-icons/md";
-import styles from './index.module.scss'
+import styles from "./index.module.scss";
 export default () => {
   const {
     register,
@@ -31,7 +31,7 @@ export default () => {
     getValues,
     watch,
     errors,
-    triggerValidation
+    triggerValidation,
   } = useForm();
   const watchShowStatus = watch("status", false);
   const [datalist, setDatalist] = useState([]);
@@ -61,17 +61,14 @@ export default () => {
           accountNumbers,
         } = data.result.subject;
         const address = residenceAddress || workingAddress;
-        setValue("company", name, { shouldValidate: true });
-        setValue("krs", krs, { shouldValidate: true });
-        setValue("regon", regon, { shouldValidate: true });
-        setValue("street", address.split(",")[0], { shouldValidate: true });
-        setValue("codeAddress", address.match(/\d{2}-\d{3}/)[0], {
-          shouldValidate: true,
-        });
-        setValue("city", address.match(/\d{2}-\d{3} (.*)/)[1], {
-          shouldValidate: true,
-        });
+        setValue("company", name);
+        setValue("krs", krs);
+        setValue("regon", regon);
+        setValue("street", address.split(",")[0]);
+        setValue("codeAddress", address.match(/\d{2}-\d{3}/)[0]);
+        setValue("city", address.match(/\d{2}-\d{3} (.*)/)[1]);
         setDatalist(accountNumbers.map((v) => convertAccountNumber(v)));
+        console.log(datalist);
         check = true;
       } else {
         throw new Error("something goes wrong no 'subject'");
@@ -84,7 +81,6 @@ export default () => {
     }
   };
   const onSubmit = (data) => {
-    console.log(data);
     if (
       (getValues("status") === "person" && setFromPesel()) ||
       (getValues("status") === "company" && setFromNip())
@@ -94,6 +90,7 @@ export default () => {
       alert("Something went wrong (probably you change nochanges values)");
     }
   };
+  const isCompany = getValues("status") === "company";
   return (
     <>
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
@@ -109,7 +106,6 @@ export default () => {
             ),
           }}
           onChange={(e) => {
-            console.log(e, watch());
             register("status");
             setValue("status", e.target.value);
           }}
@@ -135,7 +131,7 @@ export default () => {
                 e.target.value = e.target.value.replace(/\D/g, "").slice(0, 11);
                 setFromPesel();
               }}
-              onBlur={e=>triggerValidation(e.currentTarget.name)}
+              onBlur={(e) => triggerValidation(e.currentTarget.name)}
               InputLabelProps={{ shrink: true }}
               error={!!errors.pesel}
               helperText={
@@ -168,7 +164,7 @@ export default () => {
             <TextField
               label="NIP *"
               type="number"
-              onBlur={e=>triggerValidation(e.currentTarget.name)}
+              onBlur={(e) => triggerValidation(e.currentTarget.name)}
               placeholder="0123456789"
               name="nip"
               inputRef={register({ required: true, pattern: /^\d{10}$/ })}
@@ -213,7 +209,7 @@ export default () => {
             <TextField
               label={content.form.firstName.label[lang] + " *"}
               name="firstName"
-              onBlur={e=>triggerValidation(e.currentTarget.name)}
+              onBlur={(e) => triggerValidation(e.currentTarget.name)}
               inputRef={register({ required: true, pattern: /^.{3,}$/ })}
               error={!!errors.firstName}
               InputLabelProps={{ shrink: true }}
@@ -227,6 +223,7 @@ export default () => {
             <TextField
               label={content.form.lastName.label[lang] + " *"}
               name="lastName"
+              onBlur={(e) => triggerValidation(e.currentTarget.name)}
               inputRef={register({ required: true, pattern: /^.{3,}$/ })}
               error={!!errors.lastName}
               helperText={
@@ -240,10 +237,10 @@ export default () => {
             <TextField
               label={content.form.city.label[lang] + " *"}
               name="city"
-              onBlur={e=>triggerValidation(e.currentTarget.name)}
+              onBlur={(e) => triggerValidation(e.currentTarget.name)}
               inputRef={register({ required: true, pattern: /^.{3,}$/ })}
               error={!!errors.city}
-              disabled={getValues("status") === "company"}
+              disabled={isCompany}
               helperText={
                 (errors.city?.type === "required" &&
                   content.form.city.e.required[lang]) ||
@@ -255,10 +252,10 @@ export default () => {
             <TextField
               label={content.form.street.label[lang] + " *"}
               name="street"
-              onBlur={e=>triggerValidation(e.currentTarget.name)}
+              onBlur={(e) => triggerValidation(e.currentTarget.name)}
               inputRef={register({ required: true, pattern: /^.{3,}$/ })}
               error={!!errors.street}
-              disabled={getValues("status") === "company"}
+              disabled={isCompany}
               helperText={
                 (errors.street?.type === "required" &&
                   content.form.street.e.required[lang]) ||
@@ -271,10 +268,10 @@ export default () => {
               label={content.form.codeAddress.label[lang] + " *"}
               placeholder="00-000"
               name="codeAddress"
-              onBlur={e=>triggerValidation(e.currentTarget.name)}
+              onBlur={(e) => triggerValidation(e.currentTarget.name)}
               inputRef={register({ required: true, pattern: /^\d{2}-\d{3}$/ })}
               error={!!errors.codeAddress}
-              disabled={getValues("status") === "company"}
+              disabled={isCompany}
               helperText={
                 (errors.codeAddress?.type === "required" &&
                   content.form.codeAddress.e.required[lang]) ||
@@ -324,7 +321,7 @@ export default () => {
             <TextField
               label={content.form.bank.label[lang]}
               name="bank"
-              onBlur={e=>triggerValidation(e.currentTarget.name)}
+              onBlur={(e) => triggerValidation(e.currentTarget.name)}
               placeholder="00 0000 0000 0000 0000 0000 0000"
               error={!!errors.bank}
               helperText={
@@ -333,12 +330,13 @@ export default () => {
                 (errors.bank?.type === "validate" &&
                   content.form.bank.e.validate[lang])
               }
-              onChange={e=>{
-                e.target.value=convertAccountNumber(e.target.value)
+              onChange={(e) => {
+                e.target.value = convertAccountNumber(e.target.value);
               }}
               inputRef={register({
                 pattern: /^(\d{2}( \d{4}){6})?$/,
-                validate: async (value) => !value||await checkAccountBank(value),
+                validate: async (value) =>
+                  !value || (await checkAccountBank(value)),
               })}
             />
             <Button type="submit">Submit</Button>

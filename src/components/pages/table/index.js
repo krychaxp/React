@@ -31,7 +31,7 @@ export default function () {
   };
   return (
     <>
-      <table class={styles.table}>
+      <table className={styles.table}>
         <thead>
           <tr>
             {countries.length

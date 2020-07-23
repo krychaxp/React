@@ -3,7 +3,7 @@ This project was made by [Krychaxp](https://krychaxp.pl/?utm_source=github_react
 ## About app
 
 This app includes my React's skills.
-Routing, APIs, axios, useEffect/State, hooks, css.module, languages (pl,en), 
+Routing, APIs, axios, useEffect/State, hooks, css.module, languages (pl,en) (only for home,charts and forms), 
 login by google or facebook account, table functions, charts. 
 
 ## Can you see demo?
