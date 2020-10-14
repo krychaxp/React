@@ -6,13 +6,12 @@ This app includes my React's skills.
 Routing, APIs, axios, useEffect/State, hooks, css.module, languages (pl,en) (only for home,charts and forms), 
 login by google or facebook account, table functions, charts. 
 
-## Can you see demo?
-
-See on [react.krychaxp.pl](http://react.krychaxp.pl)
 
 ## How to run development?
 
 You must have [Node.js](https://nodejs.org) and be on the root directory, next you open your console (cmd/PS) and write:
+
+### `npm install`
 
 ### `npm run start`
 
